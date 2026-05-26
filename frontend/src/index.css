@@ -1,0 +1,71 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Hard reset — eliminates the white border ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+}
+
+#root {
+  width: 100vw; height: 100vh;
+  overflow: hidden;
+  display: flex;
+}
+
+:root {
+  --navy:        #05114C;
+  --orange:      #D97757;
+  --orange-dark: #b85e3e;
+  --surface:     #F7F6F3;
+  --text-sec:    #5a6282;
+  --text-muted:  #9aa0b8;
+  --border:      rgba(5,17,76,0.09);
+  --border-md:   rgba(5,17,76,0.16);
+}
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--surface);
+  color: var(--navy);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,h2,h3,h4,h5 { font-family: 'Syne', sans-serif; }
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-md); border-radius: 2px; }
+
+.badge {
+  display: inline-flex; align-items: center;
+  padding: 3px 10px; border-radius: 20px;
+  font-size: 11px; font-weight: 500;
+  letter-spacing: 0.03em; text-transform: uppercase;
+}
+.badge-active       { background:#e6f4ea; color:#1a6b2e; }
+.badge-grounded     { background:#fdecea; color:#b33020; }
+.badge-maintenance  { background:#fff3e0; color:#c25e00; }
+.badge-flagged      { background:#f1f3f8; color:#5a6282; }
+.badge-in_review    { background:#fff3e0; color:#c25e00; }
+.badge-disputed     { background:#e8eeff; color:#2044b0; }
+.badge-confirmed    { background:#fdecea; color:#b33020; }
+.badge-closed       { background:#e6f4ea; color:#1a6b2e; }
+.badge-open         { background:#fdecea; color:#b33020; }
+.badge-under_review { background:#fff3e0; color:#c25e00; }
+.badge-pending_approval { background:#e8eeff; color:#2044b0; }
+
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(10px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.fade-up   { animation: fadeUp 0.35s ease both; }
+.fade-up-1 { animation-delay: 0.05s; }
+.fade-up-2 { animation-delay: 0.10s; }
+.fade-up-3 { animation-delay: 0.15s; }
+.fade-up-4 { animation-delay: 0.20s; }
