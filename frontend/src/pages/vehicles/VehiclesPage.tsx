@@ -203,7 +203,7 @@ function DetailPanel({ vehicle, onClose }: { vehicle: Vehicle; onClose: () => vo
               </div>
               <div>
                 <label style={labelStyle}>Status</label>
-                <select value={form.status} onChange={e => setForm(f => ({ ...f, status: e.target.value }))} style={inputStyle}>
+                <select value={form.status} onChange={e => setForm(f => ({ ...f, status: e.target.value as 'active' | 'grounded' | 'maintenance' }))} style={inputStyle}>
                   <option value="active">Active</option>
                   <option value="grounded">Grounded</option>
                   <option value="maintenance">Maintenance</option>
