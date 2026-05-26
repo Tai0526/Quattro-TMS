@@ -7,7 +7,7 @@ import os
 # URL-encoded characters like %23 %3F %2C in DATABASE_URL ──────────
 def get_database_url():
     url = os.environ.get("DATABASE_URL", "")
-    # Replace % with %% so configparser treats them as literals
+    # Replace % with %% so configparser treats them as 
     return url.replace("%", "%%")
 
 config = context.config
