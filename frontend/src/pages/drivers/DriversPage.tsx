@@ -292,7 +292,7 @@ function DetailPanel({ driver, onClose }: { driver: Driver; onClose: () => void 
 
             <div>
               <label style={{ display: 'block', fontSize: 11, fontWeight: 500, color: '#000000', marginBottom: 4 }}>Status</label>
-              <select value={form.status} onChange={e => setForm(f => ({ ...f, status: e.target.value }))} style={inputStyle}>
+              <select value={form.status} onChange={e => setForm(f => ({ ...f, status: e.target.value as 'active' | 'suspended' | 'terminated' }))} style={inputStyle}>
                 <option value="active">Active</option>
                 <option value="suspended">Suspended</option>
                 <option value="terminated">Terminated</option>

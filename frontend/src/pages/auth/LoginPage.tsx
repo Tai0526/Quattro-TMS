@@ -359,15 +359,11 @@ export default function LoginPage() {
               }}
               onMouseEnter={(e) => {
                 if (!loading)
-                  ;(
-                    e.target as HTMLButtonElement
-                  ).style.background = '#b85e3e'
+                  (e.target as HTMLButtonElement).style.background = '#b85e3e'
               }}
               onMouseLeave={(e) => {
                 if (!loading)
-                  ;(
-                    e.target as HTMLButtonElement
-                  ).style.background = '#D97757'
+                  (e.target as HTMLButtonElement).style.background = '#D97757'
               }}
             >
               {loading ? 'Signing in...' : 'Sign in'}
