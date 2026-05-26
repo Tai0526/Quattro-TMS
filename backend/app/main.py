@@ -26,8 +26,8 @@ app.add_middleware(
     allow_origins=[
     "http://localhost:5173",
     "http://localhost:3000",
-    "https://*.vercel.app",      # ← add this
-    "https://your-app.vercel.app", # ← add your actual domain later
+    "https://quattro-tms.vercel.app/",      # ← add this
+    "https://quattro-tms.vercel.app/", # ← add your actual domain later
 ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -45,4 +45,4 @@ app.include_router(driver_compliance_router, prefix="/api")
 
 @app.get("/api/health")
 def health():
-    return {"status": "ok", "service": "INZU TMIS API v2"}
+    return {"status": "ok"}
