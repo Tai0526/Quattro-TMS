@@ -26,8 +26,8 @@ app.add_middleware(
     allow_origins=[
     "http://localhost:5173",
     "http://localhost:3000",
-    "https://quattro-tms-git-main-taizyakasitu2001-4371s-projects.vercel.app/",      # ← add this
-    "https://quattro-tms-git-main-taizyakasitu2001-4371s-projects.vercel.app/", # ← add your actual domain later
+    "https://quattro-tms.vercel.app/",      # ← add this
+    "https://quattro-tms.vercel.app/", # ← add your actual domain later
 ],
     allow_credentials=True,
     allow_methods=["*"],
