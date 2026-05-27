@@ -122,7 +122,7 @@ def calculate_driver_compliance(driver_id: str, db: Session) -> dict:
 
 
 def get_fleet_compliance_summary(db: Session) -> dict:
-    vehicles = db.query(Vehicle).filter(Vehicle.status != "terminated").all()
+    vehicles = db.query(Vehicle).all()
     scores = [calculate_vehicle_compliance(v.id, db) for v in vehicles]
     avg = round(sum(s["score"] for s in scores) / len(scores)) if scores else 0
     critical_count = sum(1 for s in scores if s["status"] == "critical")
