@@ -6,7 +6,7 @@ import {
   FileText, LogOut, ChevronRight, Menu, PanelLeftClose,
   PanelLeft, Wrench, ShieldCheck, BarChart2, Settings
 } from 'lucide-react'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { api } from '@/lib/api'
 
 const ALL_NAV = [
@@ -27,26 +27,42 @@ const ICON_W = 52
 const BREAK  = 900
 
 export default function Layout() {
-  const navigate  = useNavigate()
-  const location  = useLocation()
+  const navigate   = useNavigate()
+  const location   = useLocation()
+  const qc         = useQueryClient()
   const [expanded, setExpanded]     = useState(true)
   const [mobile, setMobile]         = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [role, setRole]             = useState<string>(getRole())
 
+  // ── Fetch current user — refetch whenever the access token changes ──
+  const token = localStorage.getItem('access_token')
   const { data: me } = useQuery({
-    queryKey: ['me'],
+    queryKey: ['me', token],           // key includes token so it refetches on login
     queryFn:  () => api.get('/auth/me').then(r => r.data),
-    staleTime: Infinity,
-    enabled:  !!localStorage.getItem('access_token'),
+    staleTime: 5 * 60 * 1000,         // 5 minutes — not infinity
+    enabled:  !!token,
+    retry: false,
   })
 
+  // ── Sync role on every route change ──────────────────────────────────
   useEffect(() => {
-    setRole(getRole())
+    const newRole = getRole()
+    setRole(newRole)
+    // If token exists but me query has stale data, refetch
+    if (localStorage.getItem('access_token')) {
+      qc.invalidateQueries({ queryKey: ['me'] })
+    }
   }, [location.pathname])
 
+  // ── Listen for localStorage changes (cross-tab login) ────────────────
   useEffect(() => {
-    function onStorage() { setRole(getRole()) }
+    function onStorage(e: StorageEvent) {
+      if (e.key === 'user_role' || e.key === 'access_token') {
+        setRole(getRole())
+        qc.invalidateQueries({ queryKey: ['me'] })
+      }
+    }
     window.addEventListener('storage', onStorage)
     return () => window.removeEventListener('storage', onStorage)
   }, [])
@@ -67,7 +83,11 @@ export default function Layout() {
 
   useEffect(() => { if (mobile) setMobileOpen(false) }, [location.pathname])
 
-  function logout() { localStorage.clear(); navigate('/login') }
+  function logout() {
+    localStorage.clear()
+    qc.clear()          // clear ALL cached queries so next login starts fresh
+    navigate('/login')
+  }
 
   const sidebarW   = mobile ? FULL_W : expanded ? FULL_W : ICON_W
   const showLabels = mobile ? mobileOpen : expanded
@@ -103,7 +123,7 @@ export default function Layout() {
         {/* Logo */}
         <div style={{ padding: showLabels ? '20px 16px 18px' : '20px 0 18px', borderBottom: '1px solid rgba(255,255,255,0.07)', display: 'flex', alignItems: 'center', justifyContent: showLabels ? 'flex-start' : 'center', gap: 10, minHeight: 76, flexShrink: 0 }}>
           <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', width: showLabels ? 'auto' : '100%' }}>
-            <img src="/logo.png" alt="INZU"
+            <img src="/logo.png" alt="Quattro"
               style={{ height: 30, width: 30, objectFit: 'contain', borderRadius: 6 }}
               onError={e => {
                 const el = e.target as HTMLImageElement
@@ -159,7 +179,6 @@ export default function Layout() {
         {/* User + Sign out */}
         <div style={{ padding: '8px 8px 16px', borderTop: '1px solid rgba(255,255,255,0.07)', flexShrink: 0 }}>
 
-          {/* User info — expanded */}
           {showLabels && me && (
             <div style={{ display: 'flex', alignItems: 'center', gap: 9, padding: '8px 10px 12px' }}>
               <div style={{ width: 30, height: 30, borderRadius: 8, background: '#D97757', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
@@ -178,7 +197,6 @@ export default function Layout() {
             </div>
           )}
 
-          {/* User avatar — collapsed */}
           {!showLabels && me && (
             <div style={{ display: 'flex', justifyContent: 'center', paddingBottom: 8 }}>
               <div
@@ -192,7 +210,6 @@ export default function Layout() {
             </div>
           )}
 
-          {/* Sign out */}
           <button
             onClick={logout}
             title={!showLabels ? 'Sign out' : undefined}
@@ -221,7 +238,6 @@ export default function Layout() {
           <span style={{ fontFamily: "'Syne',sans-serif", fontSize: 13, fontWeight: 600, color: '#000000' }}>{activePage}</span>
           <div style={{ flex: 1 }} />
 
-          {/* Current user pill in top bar */}
           {me && (
             <div style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 12, color: '#000000', marginRight: 8 }}>
               <div style={{ width: 24, height: 24, borderRadius: 6, background: '#D97757', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
